@@ -78,6 +78,57 @@ class Customer {
       );
     }
   }
+
+  /** Generates the customer's full name. */
+
+  getFullName() {
+
+    let fullName = `${this.firstName} ${this.lastName}`;
+    return fullName;
+
+  } 
+
+  /** Searches the customers in the database and returns customers who contain
+  *** the search string in first or last name                                  */
+
+  static async search(str) {
+
+    const results = await db.query(
+      `SELECT id, 
+         first_name AS "firstName",  
+         last_name AS "lastName", 
+         phone, 
+         notes
+       FROM customers
+       WHERE UPPER(first_name) LIKE $1 OR UPPER(last_name) LIKE $1
+       ORDER BY last_name, first_name`,
+       [`%${str.toUpperCase()}%`]
+    );
+    return results.rows.map(c => new Customer(c));
+
+  }
+
+  /** Generates the list of top 10 customers by reservation count. */
+
+  static async getTopCustomers() {
+    const results = await db.query(
+      `SELECT c.id, 
+         c.first_name AS "firstName",  
+         c.last_name AS "lastName", 
+         c.phone, 
+         c.notes,
+         COUNT(*) AS "reservationCount"
+       FROM customers AS c
+       LEFT JOIN reservations AS r
+       ON c.id = r.customer_id
+       GROUP BY c.id
+       ORDER BY COUNT(*) DESC, last_name, first_name
+       LIMIT 10`
+    );
+    return results.rows.map(c => new Customer(c));
+    
+  }
+
 }
 
 module.exports = Customer;
