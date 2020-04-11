@@ -16,6 +16,27 @@ class Reservation {
     this.notes = notes;
   }
 
+   /** methods for getting/setting number of notes */
+
+  set notes(val){
+    this._notes = val || '';
+  }
+
+  get notes() {
+    return this._notes;
+  }
+
+  /** methods for getting/setting number of guests */
+
+  set numGuests(val) {
+    if (val < 1) throw new Error("Cannot have less than 1 guest.");
+    this._bean = val;
+  }
+
+  get numGuests() {
+    return this._bean;
+  }
+
   /** formatter for startAt */
 
   getformattedStartAt() {

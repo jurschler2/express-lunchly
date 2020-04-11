@@ -81,10 +81,10 @@ class Customer {
 
   /** Generates the customer's full name. */
 
-  getFullName() {
+  get fullName() {
 
-    let fullName = `${this.firstName} ${this.lastName}`;
-    return fullName;
+    let full = `${this.firstName} ${this.lastName}`;
+    return full;
 
   } 
 
